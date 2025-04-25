@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="Theme.PersonalizedLearningApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Neon colors -->
+        <item name="colorPrimary">@color/neonBlue</item>
+        <item name="colorPrimaryVariant">@color/neonPink</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/neonPink</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <!-- Use the gradient as your window background -->
+        <item name="android:windowBackground">@drawable/gradient_bg</item>
+    </style>
+
+</resources>
