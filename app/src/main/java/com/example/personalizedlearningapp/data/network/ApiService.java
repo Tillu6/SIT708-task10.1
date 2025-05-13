@@ -1,24 +1,19 @@
 package com.example.personalizedlearningapp.data.network;
 
-import com.example.personalizedlearningapp.data.model.Task;
-import com.example.personalizedlearningapp.data.model.User;
-import java.util.List;
-import java.util.Map;
+import com.example.personalizedlearningapp.data.model.QuizResponse;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface ApiService {
-    @POST("login")
-    Call<User> login(@Body Map<String,String> creds);
+    /**
+     * GET /getQuiz?topic=...
+     * returns JSON: { "quiz": [ { "question": "...", "options": [...], "correct_answer": "A" }, … ] }
+     */
+    @GET("getQuiz")
+    Call<QuizResponse> getQuiz(@Query("topic") String topic);
 
-    @POST("signup")
-    Call<User> signup(@Body User user);
-
-    @GET("task")
-    Call<Task> getTask();
-
-    @POST("submit")
-    Call<Map<String,List<String>>> submitAnswers(@Body Map<String,String> answers);
+    /** Simple test endpoint to verify connectivity */
+    @GET("test")
+    Call<QuizResponse> runTest();
 }
