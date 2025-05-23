@@ -14,31 +14,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PersonalizedLearningApp">
-
-        <!-- 1. Login / Splash screen (start here) -->
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+        <activity
+            android:name=".UpgradeAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".QuizActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InterestsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccountLoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccountRegisterActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- 2. Sign-up or setup screen -->
-        <activity android:name=".SignUpActivity" />
-
-        <!-- 3. Interests selection -->
-        <activity android:name=".InterestsActivity" />
-
-        <!-- 4. Home / Dashboard -->
-        <activity android:name=".HomeActivity" />
-
-        <!-- 5. Quiz / Task screen -->
-        <activity android:name=".TaskActivity" />
-
-        <!-- 6. Results screen -->
-        <activity android:name=".ResultsActivity" />
 
     </application>
 </manifest>

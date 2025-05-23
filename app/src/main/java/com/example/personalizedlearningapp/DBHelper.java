@@ -1,4 +1,3 @@
-// DBHelper.java
 package com.example.personalizedlearningapp;
 
 import android.content.ContentValues;

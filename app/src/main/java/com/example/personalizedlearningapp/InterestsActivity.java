@@ -3,51 +3,64 @@ package com.example.personalizedlearningapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class InterestsActivity extends AppCompatActivity {
-    private ChipGroup chipGroup;
-    private Button btnNext;
-
-    // The four topics to display, repeated in rows
-    private final String[] TOPICS = {
-            "Algorithms",
-            "Data Structures",
-            "Web Development",
-            "Testing"
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // edge-to-edge
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_interests);
 
-        chipGroup = findViewById(R.id.chipGroup);
-        btnNext   = findViewById(R.id.btnNextInterests);
+        // apply system-bar insets as padding
+        ViewCompat.setOnApplyWindowInsetsListener(
+                findViewById(R.id.main),
+                (v, insets) -> {
+                    Insets sys = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                    v.setPadding(sys.left, sys.top, sys.right, sys.bottom);
+                    return insets;
+                }
+        );
 
-        // Dynamically add 5 rows × 4 chips = 20 chips total
-        int repeats = 5;
-        for (int i = 0; i < repeats; i++) {
-            for (String topic : TOPICS) {
-                Chip chip = new Chip(this, null, com.google.android.material.R.style.Widget_MaterialComponents_Chip_Entry);
-                chip.setText(topic);
-                chip.setCheckable(true);
-                chipGroup.addView(chip);
-            }
-        }
-
-        btnNext.setOnClickListener(v -> {
-            // TODO: collect selected topics if you need them:
-            // List<String> selected = chipGroup.getCheckedChipIds().stream()
-            //     .map(id -> ((Chip)findViewById(id)).getText().toString())
-            //     .collect(Collectors.toList());
-            // (then pass to your backend or next screen)
-
-            // For now, just go on to HomeActivity:
-            startActivity(new Intent(this, HomeActivity.class));
+        Button btnContinue = findViewById(R.id.btnContinue);
+        btnContinue.setOnClickListener(v -> {
+            startActivity(new Intent(this, MainActivity.class));
             finish();
         });
+
+        // build & shuffle interests
+        ArrayList<String> interests = new ArrayList<>();
+        Collections.addAll(interests,
+                "Web Development","Javascript","PHP","Linear Algebra","Discrete Math",
+                "Python","Data Science","AI","Machine Learning","Cyber Security",
+                "Networks","C++","Cloud Computing","Database Management","DevOps",
+                "Linux","Web Design","C#","Software Engineering","Game Dev",
+                "UI/UX","Blockchain","AR","VR","Cryptography",
+                "Data Mining","Robotics","Quantum Computing","Bioinformatics","Parallel Computing"
+        );
+        Collections.shuffle(interests);
+
+        // hook up the RecyclerView with FlexboxLayoutManager
+        RecyclerView recycler = findViewById(R.id.recyclerView);
+        FlexboxLayoutManager flm = new FlexboxLayoutManager(this);
+        flm.setJustifyContent(JustifyContent.CENTER);
+        recycler.setLayoutManager(flm);
+
+        InterestsAdapter adapter = new InterestsAdapter(this, interests);
+        recycler.setAdapter(adapter);
     }
 }

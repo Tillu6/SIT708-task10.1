@@ -1,7 +1,8 @@
 <resources>
-    <!-- Lottie contentDescription -->
-    <string name="lottie_signup_desc">Signup animation</string>
-
+    <string name="welcome_back_user">Welcome back,&#10;User!</string>
+    <string name="generate_new_quiz">Generate New Quiz</string>
+    <string name="profile_button_desc">Open profile</string>
+    <string name="quiz_list_desc">List of your quizzes</string>
     <!-- Hints -->
     <string name="hint_username">Username</string>
     <string name="hint_email">Email</string>
@@ -19,7 +20,16 @@
     <string name="hint_answer1">Answer 1</string>
     <string name="question2">2. Question 2</string>
     <string name="submit">Submit</string>
+    <!-- Header texts -->
+    <string name="register_welcome">Let’s get you</string>
+    <string name="register_tagline">Setup!</string>
 
+    <!-- Hints -->
+    <string name="hint_mobile">Mobile No.</string>
+
+    <!-- Buttons -->
+    <string name="register">Register</string>
+    <string name="login_instead">Log In Instead</string>
     <string name="hello_user">Hello, User</string>
     <string name="tasks_due">You have 1 task due</string>
     <string name="generated_task">Generated Task 1</string>
@@ -62,4 +72,64 @@
     <string name="answer_paris">Paris</string>
     <string name="answer_berlin">Berlin</string>
     <string name="answer_rome">Rome</string>
+    <!-- Shown when the user hasn’t answered every question -->
+    <string name="err_answer_all">
+        Please answer all the questions before submitting!
+    </string>
+
+    <!-- Fallback if we can’t find a quiz by its ID -->
+    <string name="err_quiz_not_found">
+        Quiz not found.
+    </string>
+
+    <!-- Header when loading a quiz normally; %1$s = the quiz topic -->
+    <string name="quiz_header">
+        Quiz:\n%1$s
+    </string>
+
+    <!-- Header when viewing results; %1$s = the quiz topic -->
+    <string name="results_header">
+        Your Results:\n%1$s quiz
+    </string>
+
+    <!-- Button text once you’re on the results screen -->
+    <string name="go_back_home">
+        Go back home
+    </string>
+
+    <!-- Generic network‐error toast -->
+    <string name="err_network">
+        Network error
+    </string>
+    <string name="ai_quiz_about_x">AI generated quiz about %1$s!</string>
+    <string name="view_results">View Results</string>
+    <!-- Interests screen -->
+    <string name="select_interests_subtitle">Select up to 10 interests.</string>
+    <string name="continue_label">Continue</string>
+    <string name="interests_list_desc">List of interests to pick from</string>
+    <string name="back_button_desc">Go back</string>
+    <string name="upgrade_account">Upgrade Account</string>
+    <string name="username_label">Username</string>
+    <string name="email_label">email@example.com</string>
+    <string name="account_type_label">Account type: Basic</string>
+
+    <string name="total_questions_title">Total Questions</string>
+    <string name="correctly_answered_title">Correctly Answered</string>
+    <string name="incorrect_answers_title">Incorrect Answers</string>
+
+    <string name="share_profile">Share Profile</string>
+    <string name="logout">Log Out</string>
+    <string name="initial_count">0</string>
+    <!-- Submit -->
+    <string name="submit_quiz">Submit</string>
+    <string name="upgrade_experience">Upgrade Your Experience</string>
+
+    <string name="starter_title">Starter</string>
+    <string name="starter_desc">No daily limits on quiz generation</string>
+
+    <string name="intermediate_title">Intermediate</string>
+    <string name="intermediate_desc">Improved quiz generation</string>
+
+    <string name="advanced_title">Advanced</string>
+    <string name="advanced_desc">Faster quiz generation\nExtensive feedback provided</string>
 </resources>
