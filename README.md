@@ -1,158 +1,174 @@
-# 🚀 Personalized Learning Experience App
-![Platform: Android](https://img.shields.io/badge/Platform-Android-blue.svg)
-![Min SDK: 21](https://img.shields.io/badge/Min%20SDK-21-brightgreen.svg)
-![Compile SDK: 35](https://img.shields.io/badge/Compile%20SDK-35-blue.svg)
-![Language: Java](https://img.shields.io/badge/Language-Java-red.svg)
+# 🎓 Personalized Learning Experience App – Enhanced Edition
+
+![Android](https://img.shields.io/badge/Platform-Android-blue.svg)
+![Java](https://img.shields.io/badge/Language-Java-red.svg)
+![SQLite](https://img.shields.io/badge/Database-SQLite-yellow.svg)
+![LLM Powered](https://img.shields.io/badge/AI-LLM%20Integration-purple.svg)
+
 <p align="center">
-  <img src="app/src/main/ic_launcher.png" alt="🔥" width="164" />
+  <img src="app/src/main/ic_launcher.png" width="128" alt="App Logo" />
 </p>
 
-
-> A futuristic, AI-inspired Android application that delivers adaptive, personalized learning experiences—tailored quizzes, intelligent tutoring flows, and dynamic assessments based on students’ interests and past interactions.
-
----
-
-## 📖 Table of Contents
-
-- [✨ About](#-about)  
-- [🚀 Features](#-features)  
-- [🛠️ Tech Stack](#️-tech-stack)  
-- [📐 Architecture](#-architecture)  
-- [🎨 UI / UX Highlights](#-ui--ux-highlights)  
-- [⚙️ Getting Started](#️-getting-started)  
-- [📝 Usage](#-usage)  
-- [🤝 Contributing](#-contributing)   
+> A dynamic AI-integrated Android application that empowers learners with **tailored quizzes**, **profile statistics**, **learning history**, and **upgradable plans**—enhanced for SIT708 Task 10.1D.
 
 ---
 
-## ✨ About
+## 📌 Table of Contents
 
-The **Personalized Learning Experience App** is a prototype Android application built for SIT706 Task 6.1. It leverages modern UI components, Lottie animations, and a simple local database to simulate a fully adaptive learning platform. Students can:
-
-1. **Sign up** and pick their areas of interest  
-2. **Log in** and view a custom task dashboard  
-3. **Complete AI-generated quizzes** with multiple question types  
-4. **Review results** enriched with static or AI-driven feedback  
-
-> “Empower students with learning that adapts to them — not the other way around.”  
+* [📚 About](#-about)
+* [✨ Features](#-features)
+* [🛠️ Tech Stack](#-tech-stack)
+* [🏗️ Architecture](#-architecture-overview)
+* [📱 Screenshots](#-screenshots)
+* [🚀 Getting Started](#-getting-started)
+* [📋 Usage Flow](#-usage-flow)
+* [🧠 LLM Role](#-llm-role)
+* [🙌 Contributions](#-contributions)
+* [📄 License](#-license)
 
 ---
 
-## 🚀 Features
+## 📚 About
 
-- 🔒 **Secure Authentication**  
-  - Sign-up / Login flow with field validation  
-  - Local SQLite storage via `DBHelper`
+This version of the **Personalized Learning Experience App** extends the Task 6.1D project by introducing:
 
-- 🎯 **Interest Selection**  
-  - Material Chips to pick up to 10 topics  
-  - Persists selection for future personalization  
+* 🔄 **History Screen**: Review past questions and answers  
+* 📤 **Profile Sharing**: Generate and share QR with public stats  
+* 💳 **Upgrade Plans**: Simulated in-app purchases for advanced plans  
+* 💡 **LLM-powered quizzes**: Dynamically generated via `Gemma 3B`
 
-- 🧩 **Adaptive Quiz Engine**  
-  - Multi-screen quiz (radio-button questions, toggles, …)  
-  - “Next” arrow navigation between question cards  
-  - Dynamic question set (3 questions by default)  
+---
 
-- 📈 **Results & Feedback**  
-  - Displays student answers  
-  - Placeholder for AI-driven model responses  
+## ✨ Features
 
-- 🎨 **Modern UI**  
-  - Gradient backgrounds & neumorphic cards  
-  - Lottie “robot brain” animations  
-  - Material Components & CardViews  
+| Category       | Feature Description                              |
+| -------------- | ------------------------------------------------ |
+| 👤 Profile     | View stats, update avatar, generate shareable QR |
+| 📚 History     | See previous quiz attempts with full breakdown   |
+| 🎓 Quizzes     | Adaptive questions from LLM based on interests   |
+| 🔍 Feedback    | Detailed results with correctness highlights     |
+| 💼 Plans       | Choose from Starter, Intermediate, Advanced      |
+| 📤 Sharing     | Share public profile as QR (Lottie-based dialog) |
+| 🔐 Secure Auth | Signup/Login with local validation               |
+| 📱 UI Design   | Flexbox layout, Material Components, Lottie      |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer            | Technology                        |
-| ---------------- | --------------------------------- |
-| 📱 Platform      | Android (SDK 35+)                 |
-| 🛠️ Language      | Java (AndroidX)                   |
-| 📊 Database      | SQLite (`SQLiteOpenHelper`)       |
-| 🎨 UI Toolkit    | Material Components, Lottie       |
-| ⚙️ Build System  | Gradle Kotlin DSL                 |
+| Layer           | Technology                       |
+| --------------- | -------------------------------- |
+| Language        | Java (AndroidX)                  |
+| Architecture    | MVVM-ish modular structure       |
+| Database        | SQLite                           |
+| UI Components   | Material, Flexbox, RecyclerView  |
+| QR & Animations | ZXing, Lottie                    |
+| LLM Backend     | Flask + HuggingFace Transformers |
+| Model Used      | `google/gemma-3-1b-it`           |
 
 ---
 
-## 📐 Architecture
+## 🏗️ Architecture Overview
 
 ```txt
-┌────────────┐      ┌───────────────┐      ┌──────────────┐
-│ MainActivity│─▶ SignUpActivity ─▶ InterestsActivity ─▶ HomeActivity ─▶ TaskActivity ─▶ ResultsActivity
-│  (Splash)  │      │   (Form)      │      │  (Chips)     │      │ (Dashboard) │      │ (Quiz) │      │ (Feedback) │
-└────────────┘      └───────────────┘      └──────────────┘      └──────────────┘      └──────────┘      └───────────┘
-        │                                ▲                                         ▲
-        └────────── DBHelper ────────────┘─────────────────────────────────────────┘
-```
+MainActivity ──▶ RegisterActivity ──▶ InterestsActivity
+                                   └─▶ DashboardActivity
+                                          ├─▶ TaskActivity ──▶ ResultActivity
+                                          ├─▶ ProfileActivity ──▶ Share QR
+                                          ├─▶ HistoryActivity
+                                          └─▶ UpgradeActivity
+                                   
+LLM API (Flask) ──▶ GET /getQuiz?topic=XYZ
+````
 
 ---
 
-## 🎨 UI / UX Highlights
-
-| Screen                | Description                              |
-| --------------------- | ---------------------------------------- |
-| **Sign Up & Login**   | Lottie banner, form validation           |
-| **Interests**         | Select up to 10 topics via Chips         |
-| **Home Dashboard**    | “Hello, [User]”, task summary card       |
-| **Adaptive Quiz**     | CardView questions, radio & toggle inputs|
-| **Results**           | Clear summary + AI-placeholder feedback  |
+## 📱 Screenshots
 
 <details>
-<summary>Click to expand sample screenshots</summary>
+<summary>✨ Tap to Expand</summary>
 
-![Login / Sign Up](docs/screenshots/login.png)  
-![Interests](docs/screenshots/interests.png)  
-![Dashboard](docs/screenshots/home.png)  
-![Quiz](docs/screenshots/task.png)  
-![Results](docs/screenshots/results.png)  
+| Login/Register                  | Interest Selection                  | Dashboard                      |
+| ------------------------------- | ----------------------------------- | ------------------------------ |
+| ![](docs/screenshots/login.png) | ![](docs/screenshots/interests.png) | ![](docs/screenshots/home.png) |
+
+| Quiz Page                      | Result                            | History                           |
+| ------------------------------ | --------------------------------- | --------------------------------- |
+| ![](docs/screenshots/task.png) | ![](docs/screenshots/results.png) | ![](docs/screenshots/history.png) |
+
+| Profile                           | Upgrade                           | Share                           |
+| --------------------------------- | --------------------------------- | ------------------------------- |
+| ![](docs/screenshots/profile.png) | ![](docs/screenshots/upgrade.png) | ![](docs/screenshots/share.png) |
 
 </details>
 
 ---
 
-## ⚙️ Getting Started
+## 🚀 Getting Started
 
-1. **Clone this repo**
-   ```bash
-   git clone https://github.com/Tillu6/SIT706-6.1D_Personalized-Learning-Experience-App.git
-   cd SIT706-6.1D_Personalized-Learning-Experience-App
-   ```
+```bash
+git clone https://github.com/Tillu6/SIT708-task10.1.git
+cd SIT708-task10.1
+```
 
-2. **Open in Android Studio**
-   - File → Open → select project root  
-   - Let Gradle sync & download dependencies
-
-3. **Run on Device / Emulator**
-   - API level 30+ recommended  
-   - Hit ▶️ **Run** 
+* 📱 Open project in Android Studio
+* 🔄 Let Gradle sync and install dependencies
+* ▶️ Run on Emulator or Device (Android API 30+)
 
 ---
 
-## 📝 Usage
+## 📋 Usage Flow
 
-1. **Sign up** with unique username & password  
-2. **Select interests** to personalize your experience  
-3. **Log in** and view your dashboard  
-4. **Tap the arrow** on the task card to start a quiz  
-5. **Answer questions**, tap **Next** to navigate  
-6. **Submit** and review your results  
-
-> Feel free to swap the dummy data with real API calls or integrate an LLM backend!
-
----
-
-## 🤝 Contributing
-
-1. Fork the repository  
-2. Create your feature branch (`git checkout -b feature/XYZ`)  
-3. Commit your changes (`git commit -m 'Add XYZ feature'`)  
-4. Push to the branch (`git push origin feature/XYZ`)  
-5. Open a Pull Request  
-
-Please follow the existing code style and commit conventions.
+1. **Register & Login**
+2. **Select interests** (up to 10 topics)
+3. **View dashboard** tailored to interests
+4. **Start a quiz** → Answer questions
+5. **Submit and view results**
+6. **Visit Profile** → Share or upgrade
+7. **Review History** of past quizzes anytime
 
 ---
 
-> Crafted with ❤️ and ☕ by the Personalized Learning Team  
+## 🧠 LLM Role
+
+* Topic-based prompt sent to `/getQuiz` (Flask backend)
+* `Gemma 3B IT` generates 3 questions with options and answers
+* Server parses model output and sends structured JSON to app
+
+Example:
+
+```json
+{
+  "quiz": [
+    {
+      "question": "What is polymorphism in OOP?",
+      "options": ["Inheritance", "Encapsulation", "Overriding", "Abstraction"],
+      "correct_answer": "Overriding"
+    }
+  ]
+}
+```
+
+---
+
+## 🙌 Contributions
+
+You're welcome to fork and enhance:
+
+```bash
+git checkout -b feature/YourFeature
+```
+
+Contribute ideas like:
+
+* Real Google Pay integration
+* Firebase authentication
+* MongoDB backend (cloud sync)
+
+---
+
+## 📄 License
+
+MIT © 2024 Tillu6 | Deakin University – SIT708
+
+---
