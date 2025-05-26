@@ -1,4 +1,40 @@
 <resources>
+
+    <!-- Login -->
+    <string name="login_welcome_Part1">Welcome,</string>
+    <string name="login_welcome_Part2">Student!</string>
+    <string name="login_subtitle">Lets Start Learning!</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_button">Login</string>
+    <string name="login_register_prompt">Need an Account?</string>
+
+    <!-- Register -->
+    <string name="register_title">Lets get you Setup!</string>
+    <string name="register_email">Email</string>
+    <string name="register_confirm_email">Confirm Email</string>
+    <string name="register_password">Password</string>
+    <string name="register_confirm_password">Confirm Password</string>
+    <string name="register_phone">Phone Number</string>
+    <string name="register_button">Create new Account</string>
+
+    <!-- Interests -->
+    <string name="interests_title">Your Interests</string>
+    <string name="interests_subtitle">You may select up to 10 topics</string>
+    <string name="interests_next">Next</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Hello, Your Name</string>
+    <string name="dashboard_task_info">You have 1 task due</string>
+    <string name="dashboard_task_card">Generated Task 1\nSmall Description for the generated Task</string>
+
+    <!-- Task -->
+    <string name="task_submit">Submit</string>
+
+    <!-- Result -->
+    <string name="result_title">Your Results</string>
+    <string name="result_continue">Continue</string>
+
     <string name="welcome_back_user">Welcome back,&#10;User!</string>
     <string name="generate_new_quiz">Generate New Quiz</string>
     <string name="profile_button_desc">Open profile</string>
@@ -10,6 +46,13 @@
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="hint_phone">Phone Number</string>
+    <string name="login_tagline">Welcome back! Please sign in to continue.</string>
+    <string name="account_type_formatted">Account type: %1$s</string>
+    <string name="account_type_basic">Account type: Basic</string>
+    <string name="share_profile_subject">Check out my profile!</string>
+    <string name="share_profile_message_template">Check out my profile on Personalized Learning App! %1$s%2$s/quizzes</string>
+    <string name="share_profile_chooser_title">Share Profile Via</string>
+    <string name="share_url_base">http://10.0.2.2:3000/users/</string>
 
     <!-- Button -->
     <string name="create_account">Create New Account</string>
@@ -59,6 +102,13 @@
     <string name="content_desc_next_q2">Toggle answer for question 2</string>
     <!-- Q2 Arrow -->
     <string name="desc_q2_arrow">Next question</string>
+
+
+    <string name="err_generic_loading">Could not load quiz data. Please try again.</string>
+    <string name="err_quiz_data_not_loaded">Quiz data not loaded yet. Please wait or try again.</string>
+    <string name="err_api_response">Server error loading quizzes. Please try again later.</string>
+    <string name="err_auth_required">Authentication required. Please log in again.</string>
+    <string name="loading_quiz_topic">Loading quiz topic...</string>
     <!-- Q2 -->
     <string name="task_q2_title">2. Which planet is known as the Red Planet?</string>
     <string name="task_q2_desc">Select one:</string>

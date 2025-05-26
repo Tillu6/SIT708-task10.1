@@ -17,24 +17,15 @@
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />
-        <activity
-            android:name=".UpgradeAccountActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".QuizActivity"
-            android:exported="false" />
-        <activity
-            android:name=".InterestsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AccountLoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AccountRegisterActivity"
-            android:exported="false" />
+        <activity android:name=".InterestsActivity" />
+        <activity android:name=".DashboardActivity" />
+        <activity android:name=".TaskActivity" />
+        <activity android:name=".ResultActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".HistoryActivity" />
+        <activity android:name=".UpgradeActivity" />
+        <activity android:name=".ShareActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

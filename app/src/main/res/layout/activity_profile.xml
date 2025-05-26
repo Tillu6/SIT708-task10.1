@@ -1,234 +1,342 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:background="@drawable/gradient_bg"
+    android:orientation="vertical"
+    android:padding="20dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
-    tools:context=".ProfileActivity">
+    android:layout_height="match_parent">
 
-    <!-- Back arrow -->
-    <ImageButton
-        android:id="@+id/btnGoBack"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:backgroundTint="@android:color/transparent"
-        app:srcCompat="@drawable/left_arrow"
-        android:contentDescription="@string/back_button_desc"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"/>
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="70dp"
+        android:layout_height="35dp"
+        android:src="@drawable/ic_arrow_back"
+        android:background="@drawable/bg_back_btn"
+        android:padding="8dp"
+        android:layout_gravity="start"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="5dp"
+        android:elevation="4dp"/>
 
-    <!-- Upgrade account -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnUpgradeAccount"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnGoBack"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/upgrade_account"
-        android:textAllCaps="false"/>
-
-    <!-- Profile info -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardProfileInfo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="8dp"
-        app:layout_constraintTop_toBottomOf="@id/btnGoBack"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:background="@drawable/gradient_card_background">
-
-            <TextView
-                android:id="@+id/tvUsername"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/username_label"
-                android:textColor="@android:color/white"
-                android:textSize="24sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/tvEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/email_label"
-                android:textColor="@android:color/white"/>
-
-            <TextView
-                android:id="@+id/tvAccountType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/account_type_label"
-                android:textColor="@android:color/white"/>
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Stats row -->
+    <!-- Header -->
     <LinearLayout
-        android:id="@+id/statsRowContainer"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintTop_toBottomOf="@id/cardProfileInfo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_task_card"
+        android:padding="16dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginHorizontal="5dp"
+        android:elevation="4dp">
 
-        <!-- Total Questions -->
-        <androidx.cardview.widget.CardView
+        <!-- Left: User Info -->
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="6dp">
+            android:layout_weight="1">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:background="@drawable/gradient_card_background">
+                android:text="Username"
+                android:textSize="30sp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"/>
 
-                <TextView
-                    android:id="@+id/tvTotalQuestionsTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/total_questions_title"
-                    android:textColor="@android:color/white"
-                    android:textAlignment="center"/>
-
-                <TextView
-                    android:id="@+id/tvTotalQuestions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/initial_count"
-                    android:textColor="@android:color/white"
-                    android:textAlignment="center"
-                    android:textSize="32sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Correctly Answered -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="6dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_email"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:background="@drawable/gradient_card_background">
+                android:text="username@example.com"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tvCorrectlyAnsweredTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/correctly_answered_title"
-                    android:textColor="@android:color/white"
-                    android:textAlignment="center"/>
+        <!-- Right: Avatar section -->
+        <FrameLayout
+            android:id="@+id/profileContainer"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_gravity="center">
 
-                <TextView
-                    android:id="@+id/tvCorrectlyAnswered"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/initial_count"
-                    android:textColor="@android:color/white"
-                    android:textAlignment="center"
-                    android:textSize="32sp"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profilePhoto"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/default_avatar"
+                android:scaleType="centerCrop"
+                android:padding="5dp"
+                app:shapeAppearanceOverlay="@style/RoundedImageView"
+                app:strokeColor="#000000"
+                app:strokeWidth="7dp"/>
+
+            <ImageView
+                android:id="@+id/ivEditImage"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="bottom|end"
+                android:src="@drawable/ic_add"
+                android:padding="5dp" />
+        </FrameLayout>
     </LinearLayout>
 
-    <!-- Incorrect Answers -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardIncorrectAnswers"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="6dp"
-        app:layout_constraintTop_toBottomOf="@id/statsRowContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    <!--  Notification  -->
+    <LinearLayout
+        android:id="@+id/tv_notification"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:gravity="center_vertical" android:orientation="horizontal"
+        android:paddingHorizontal="16dp" android:paddingVertical="8dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginHorizontal="5dp"
+        android:elevation="4dp"
+        android:background="@drawable/bg_info_box">
 
+        <ImageView
+            android:layout_width="20dp" android:layout_height="20dp"
+            android:src="@drawable/ic_notification" android:layout_marginEnd="8dp" />
+        <TextView android:text="Display any important notifications here"
+            android:textColor="#000000" android:textSize="14sp" android:textStyle="bold"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <!-- Stats -->
+    <!--  First Line  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <!-- Total -->
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"
-            android:background="@drawable/gradient_card_background">
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="30dp"
+            android:background="@drawable/bg_task_card"
+            android:layout_marginBottom="15dp"
+            android:layout_marginHorizontal="5dp"
+            android:elevation="4dp">
 
             <TextView
-                android:id="@+id/tvIncorrectAnswersTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/incorrect_answers_title"
-                android:textColor="@android:color/white"
-                android:textAlignment="center"/>
+                android:text="Total\nQuestions"
+                android:textColor="#FFF"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-            <TextView
-                android:id="@+id/tvIncorrectAnswers"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/initial_count"
-                android:textColor="@android:color/white"
-                android:textAlignment="center"
-                android:textSize="32sp"
-                android:textStyle="bold"/>
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_document"/>
+
+                <TextView
+                    android:id="@+id/tv_total_number"
+                    android:text="10"
+                    android:textColor="#FFF"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
-    <!-- Share & Logout -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnShareProfile"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginHorizontal="16dp"
-        app:layout_constraintTop_toBottomOf="@id/cardIncorrectAnswers"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/share_profile"
-        android:textAllCaps="false"/>
+        <!-- Correct -->
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="30dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginHorizontal="5dp"
+            android:elevation="4dp"
+            android:background="@drawable/bg_task_card">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLogout"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@id/btnShareProfile"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/logout"
-        android:textAllCaps="false"/>
+            <TextView
+                android:text="Correct\nAnswers"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_document"/>
+
+                <TextView
+                    android:id="@+id/tv_correct_number"
+                    android:text="10"
+                    android:textColor="#FFF"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--  Second Line  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:background="@drawable/bg_task_card"
+        android:layout_marginBottom="16dp"
+        android:layout_marginHorizontal="5dp"
+        android:elevation="4dp">
+
+        <!-- Incorrect -->
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="30dp"
+            android:layout_marginEnd="10dp">
+
+            <TextView
+                android:text="Incorrect\nAnswers"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_document"/>
+
+                <TextView
+                    android:id="@+id/tv_incorrect_number"
+                    android:text="10"
+                    android:textColor="#FFF"
+                    android:textSize="32sp"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--  AI section  -->
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingVertical="40dp"
+            android:layout_marginEnd="10dp">
+
+            <!-- AI Summary Prompt -->
+            <LinearLayout
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:gravity="center_vertical" android:orientation="horizontal"
+                android:paddingHorizontal="8dp" android:paddingVertical="4dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@drawable/bg_blue_round_button">
+                <ImageView
+                    android:layout_width="15dp" android:layout_height="15dp"
+                    android:src="@drawable/ic_sparkler" android:layout_marginEnd="8dp" />
+                <TextView android:text="Summarized by Al"
+                    android:textColor="#000000" android:textSize="12sp" android:textStyle="bold"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <TextView
+                android:text="query the LLM to get a summary for your incorrect answers"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginTop="5dp"
+                android:layout_marginHorizontal="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Share Button -->
+    <LinearLayout
+        android:id="@+id/btn_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/bg_green_round_button"
+        android:padding="10dp" android:layout_marginHorizontal="10dp"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_arrow_share"
+            android:layout_marginStart="5dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/btn_upgrade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Upgrade Account"
+        android:textColor="#000"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:background="@drawable/bg_green_round_button"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="10dp"/>
+</LinearLayout>
+

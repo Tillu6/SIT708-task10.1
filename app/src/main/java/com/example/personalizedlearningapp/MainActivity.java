@@ -1,124 +1,81 @@
 package com.example.personalizedlearningapp;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.personalizedlearningapp.API.AuthManager;
-import com.example.personalizedlearningapp.API.RetrofitClient;
-import com.example.personalizedlearningapp.API.models.ResponsePost;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Random;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView tvText;
-    private Button btnGenerateNewQuiz;
-    private ImageButton btnProfile;
-    private RecyclerView recycler;
-    private TasksAdapter adapter;
-
-    private AuthManager authManager;
-    private ArrayList<Quiz> quizzes;
-    private ArrayList<String> interests;
+    private EditText etUsername, etPassword;
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
 
-        // enable edge-to-edge rendering
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        dbHelper = new DatabaseHelper(this);
 
-        setContentView(R.layout.activity_main);
+        etUsername = findViewById(R.id.etUsername);
+        etPassword = findViewById(R.id.etPassword);
+        Button btnLogin = findViewById(R.id.btnLogin);
+        Button btnClearAll = findViewById(R.id.btnClearAll);
+        TextView tvRegister = findViewById(R.id.tvRegister);
 
-        // apply system-bar insets as padding
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets sys = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(sys.left, sys.top, sys.right, sys.bottom);
-            return insets;
+        // Handle login logic and navigate to DashboardActivity
+        btnLogin.setOnClickListener(v -> {
+            String username = etUsername.getText().toString();
+            String password = etPassword.getText().toString();
+
+            Cursor cursor = dbHelper.loginUser(username, password);
+            if (cursor.moveToFirst()) {
+                String avatarUri = cursor.getString(cursor.getColumnIndexOrThrow("avatar_uri"));
+                String email = cursor.getString(cursor.getColumnIndexOrThrow("email"));
+
+                // On successful login, fetch user ID and move to Dashboard
+                int userId = getUserIdByUsername(username);
+                Intent intent = new Intent(this, DashboardActivity.class);
+                intent.putExtra("user_id", userId);
+                intent.putExtra("username", username);
+                intent.putExtra("avatar_uri", avatarUri);
+                intent.putExtra("email", email);
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
+            }
         });
 
-        // bind views
-        tvText             = findViewById(R.id.textView);
-        btnGenerateNewQuiz = findViewById(R.id.btnGenerateNewQuiz);
-        btnProfile         = findViewById(R.id.btnProfile);
-        recycler           = findViewById(R.id.tasksRecyclerView);
-
-        // check login
-        authManager = new AuthManager(this);
-        if (authManager.getToken() == null || !authManager.isTokenValid()) {
-            startActivity(new Intent(this, AccountLoginActivity.class));
-            finish();
-            return;
-        }
-
-        // check interests
-        interests = authManager.getInterests();
-        if (interests == null || interests.size() < 3) {
-            startActivity(new Intent(this, InterestsActivity.class));
-            finish();
-            return;
-        }
-
-        // welcome text
-        String userName = authManager.getJwtProperty("username");
-        tvText.setText("Welcome back,\n" + userName + "!");
-
-        // profile button
-        btnProfile.setOnClickListener(v -> {
-            startActivity(new Intent(this, ProfileActivity.class));
-            finish();
+        // Clear all user and interest data (for testing or reset)
+        btnClearAll.setOnClickListener(v -> {
+            dbHelper.clearAllUsers();
+            Toast.makeText(this, "All test data cleared", Toast.LENGTH_SHORT).show();
         });
 
-        // setup RecyclerView
-        quizzes = new ArrayList<>();
-        recycler.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TasksAdapter(this, quizzes);
-        recycler.setAdapter(adapter);
-
-        // load existing quizzes
-        RetrofitClient.getInstance()
-                .getAPI()
-                .getUsersQuizzes(authManager.getToken())
-                .enqueue(new Callback<ResponsePost>() {
-                    @Override
-                    public void onResponse(Call<ResponsePost> call, Response<ResponsePost> resp) {
-                        if (!resp.isSuccessful() || resp.body() == null) return;
-                        quizzes.addAll(QuizParser.parseQuizzes(MainActivity.this, resp.body().message));
-                        Collections.reverse(quizzes);
-                        Collections.sort(quizzes, Comparator.comparing(Quiz::userHasAttempted));
-                        if (quizzes.size() < 3) generateNewQuiz();
-                        adapter.notifyDataSetChanged();
-                    }
-                    @Override
-                    public void onFailure(Call<ResponsePost> call, Throwable t) {
-                        Toast.makeText(MainActivity.this, "Network error", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        // “Generate New Quiz” click
-        btnGenerateNewQuiz.setOnClickListener(v -> generateNewQuiz());
+        // Navigate to RegisterActivity for new user signup
+        tvRegister.setOnClickListener(v -> {
+            startActivity(new Intent(this, RegisterActivity.class));
+        });
     }
 
-    private void generateNewQuiz() {
-        // … your existing “pick random topic, placeholder, enqueue new quiz” logic …
+    /**
+     * Fetch user ID by their username from the database.
+     */
+    private int getUserIdByUsername(String username) {
+        int id = -1;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT id FROM users WHERE username = ?", new String[]{username});
+        if (cursor.moveToFirst()) {
+            id = cursor.getInt(0);
+        }
+        cursor.close();
+        return id;
     }
 }

@@ -1,144 +1,206 @@
 package com.example.personalizedlearningapp;
+
+import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.ImageButton;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.personalizedlearningapp.API.AuthManager;
-import com.example.personalizedlearningapp.API.RetrofitClient;
-import com.example.personalizedlearningapp.API.models.ResponsePost;
+import com.bumptech.glide.Glide;
+import com.example.personalizedlearningapp.model.User;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private TextView tvUsername;
-    private TextView tvEmail;
-    private TextView tvTotalQuestions;
-    private TextView tvCorrectlyAnswered;
-    private TextView tvIncorrectAnswers;
-    private TextView tvAccountType;
+    private ImageView btnBack, ivEditImage;
+    private ShapeableImageView profilePhoto;
+    private TextView tvUsername, tvEmail, tvTotal, tvCorrect, tvIncorrect, tvNotifyText, btnUpgrade;
+    private LinearLayout notificationLayout, btnShare;
+    private DatabaseHelper dbHelper;
+    private int userId;
+    private String username, email, avatarUri;
+    private int total, correct, incorrect;
+    private String copiedImagePath = null;
 
-    private Button btnLogout;
-    private Button btnShareProfile;
-    private Button btnUpgradeAccount;
-
-
-    private AuthManager authManager;
+    // Launcher for selecting a profile image from gallery
+    private final ActivityResultLauncher<Intent> imagePickerLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    profilePhoto.setImageURI(uri);
+                    copiedImagePath = copyImageToInternalStorage(uri);
+                    dbHelper.updateAvatarUri(userId, copiedImagePath);
+                    Toast.makeText(this, "Avatar updated!", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
-        authManager = new AuthManager(this);
+        // Bind UI components
+        btnBack = findViewById(R.id.btnBack);
+        profilePhoto = findViewById(R.id.profilePhoto);
+        ivEditImage = findViewById(R.id.ivEditImage);
+        tvUsername = findViewById(R.id.tv_username);
+        tvEmail = findViewById(R.id.tv_email);
+        tvTotal = findViewById(R.id.tv_total_number);
+        tvCorrect = findViewById(R.id.tv_correct_number);
+        tvIncorrect = findViewById(R.id.tv_incorrect_number);
+        notificationLayout = findViewById(R.id.tv_notification);
+        tvNotifyText = (TextView) notificationLayout.getChildAt(1); // Notification message
+        btnShare = findViewById(R.id.btn_share);
+        btnUpgrade = findViewById(R.id.btn_upgrade);
 
-        if (authManager.getToken() == null || !authManager.isTokenValid()) {
-            Intent intent = new Intent(this, AccountLoginActivity.class);
-            startActivity(intent);
-            finish();
+        // Fetch user data from Intent and database
+        userId = getIntent().getIntExtra("user_id", -1);
+        dbHelper = new DatabaseHelper(this);
+        User user = dbHelper.getUserById(userId);
+        if (user != null) {
+            username = user.username;
+            email = user.email;
+            avatarUri = user.avatarUri;
         }
 
+        Log.d("PROFILE_STATS", "Id: " + userId);
+        Log.d("PROFILE_STATS", "Name: " + username);
+        Log.d("PROFILE_STATS", "Email: " + email);
 
-        ((ImageButton) findViewById(R.id.btnGoBack)).setOnClickListener(view -> {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        });
+        // Display user information
+        tvUsername.setText(username);
+        tvEmail.setText(email);
+        if (avatarUri != null && !avatarUri.isEmpty()) {
+            Glide.with(this).load(avatarUri).into(profilePhoto);
+        }
 
-        btnLogout = findViewById(R.id.btnLogout);
-        btnShareProfile = findViewById(R.id.btnShareProfile);
-        btnUpgradeAccount = findViewById(R.id.btnUpgradeAccount);
+        // Get and calculate quiz statistics
+        List<String[]> questionStats = dbHelper.getAllQuestionsByUser(userId);
+        total = questionStats.size();
+        correct = 0;
+        for (String[] pair : questionStats) {
+            if (pair[0] != null && pair[0].equals(pair[1])) correct++;
+        }
+        incorrect = total - correct;
 
-        tvUsername = findViewById(R.id.tvUsername);
-        tvEmail = findViewById(R.id.tvEmail);
-        tvTotalQuestions = findViewById(R.id.tvTotalQuestions);
-        tvCorrectlyAnswered = findViewById(R.id.tvCorrectlyAnswered);
-        tvIncorrectAnswers = findViewById(R.id.tvIncorrectAnswers);
-        tvAccountType = findViewById(R.id.tvAccountType);
+        Log.d("PROFILE_STATS", "Total questions answered: " + total);
+        Log.d("PROFILE_STATS", "Correct answers: " + correct);
+        Log.d("PROFILE_STATS", "Incorrect answers: " + incorrect);
 
-        tvUsername.setText(authManager.getJwtProperty("username"));
-        tvEmail.setText(authManager.getJwtProperty("email"));
+        // Display statistics in UI
+        tvTotal.setText(String.valueOf(total));
+        tvCorrect.setText(String.valueOf(correct));
+        tvIncorrect.setText(String.valueOf(incorrect));
 
-        btnLogout.setOnClickListener(view -> {
-            authManager.logout();
-            startActivity(new Intent(this, AccountLoginActivity.class));
-            finish();
-        });
-
-
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("extra_upgrade")) {
-            String upgradeType = intent.getStringExtra("extra_upgrade");
-            tvAccountType.setText("Account type: " + upgradeType);
+        // Show notification if no questions attempted
+        if (total == 0) {
+            notificationLayout.setVisibility(View.VISIBLE);
+            tvNotifyText.setText("You have not finished any questions yet!");
         } else {
-            tvAccountType.setText("Account type: Basic");
+            notificationLayout.setVisibility(View.GONE);
         }
-        btnUpgradeAccount.setOnClickListener(view -> {
-            startActivity(new Intent(this, UpgradeAccountActivity.class));
-        });
 
-        btnShareProfile.setOnClickListener(view -> {
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "Check out my profile!");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, BuildConfig.SHARE_URL + authManager.getJwtProperty("username") + "/quizzes");
-            startActivity(Intent.createChooser(shareIntent, "Share"));
-        });
+        // Handle back button action
+        btnBack.setOnClickListener(v -> finish());
 
-        Call<ResponsePost> call = RetrofitClient.getInstance()
-                .getAPI().getUsersQuizzes(authManager.getToken());
-
-        call.enqueue(new Callback<ResponsePost>() {
-            @Override
-            public void onResponse(Call<ResponsePost> call, Response<ResponsePost> response) {
-                if (!response.isSuccessful()) {
-                    System.out.println("Error occurred!");
-                    return;
-                }
-
-                String quizData = response.body().message;
-                ArrayList<Quiz> quizzes = new ArrayList<>();
-                quizzes.addAll(QuizParser.parseQuizzes(ProfileActivity.this, quizData));
-
-                int totalQuestions = 0;
-                int wrongAnswered = 0;
-                int correctAnswered = 0;
-                for (Quiz quiz : quizzes) {
-                    totalQuestions += quiz.getTotalQuestions();
-                    correctAnswered += quiz.getCorrectAnswers();
-                    wrongAnswered += quiz.getWrongAnswers();
-                }
-
-                tvTotalQuestions.setText(String.valueOf(totalQuestions));
-                tvCorrectlyAnswered.setText(String.valueOf(correctAnswered));
-                tvIncorrectAnswers.setText(String.valueOf(wrongAnswered));
-            }
-
-            @Override
-            public void onFailure(Call<ResponsePost> call, Throwable throwable) {
-                System.out.println("BAD ERROR" + throwable.getMessage());
+        // Share statistics as QR code
+        btnShare.setOnClickListener(v -> {
+            String content = "Username: " + username +
+                    "\nEmail: " + email +
+                    "\n\nTotal Questions: " + total +
+                    "\nCorrect Answers: " + correct +
+                    "\nIncorrect Answers: " + incorrect;
+            Bitmap qrBitmap = generateQRCode(content);
+            if (qrBitmap != null) {
+                showQrDialog(qrBitmap);
+            } else {
+                Toast.makeText(this, "Failed to generate QR code.", Toast.LENGTH_SHORT).show();
             }
         });
 
+        // Navigate to UpgradeActivity
+        btnUpgrade.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfileActivity.this, UpgradeActivity.class);
+            startActivity(intent);
+        });
+
+        // Launch image picker for avatar change
+        ivEditImage.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            imagePickerLauncher.launch(intent);
+        });
+    }
+
+    // Save selected image to internal storage
+    private String copyImageToInternalStorage(Uri sourceUri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(sourceUri);
+            File file = new File(getFilesDir(), "avatar_" + System.currentTimeMillis() + ".jpg");
+            OutputStream outputStream = new FileOutputStream(file);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.close();
+            inputStream.close();
+            return file.getAbsolutePath();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Generate QR code from a string
+    private Bitmap generateQRCode(String content) {
+        QRCodeWriter writer = new QRCodeWriter();
+        try {
+            BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512);
+            Bitmap qr = Bitmap.createBitmap(512, 512, Bitmap.Config.RGB_565);
+            for (int x = 0; x < 512; x++) {
+                for (int y = 0; y < 512; y++) {
+                    qr.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+            return qr;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Display QR code in a bottom sheet dialog
+    private void showQrDialog(Bitmap qrBitmap) {
+        View bottomSheetView = LayoutInflater.from(this).inflate(R.layout.share_page, null);
+        ImageView qrImageView = bottomSheetView.findViewById(R.id.qrImageView);
+        qrImageView.setImageBitmap(qrBitmap);
+
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        dialog.setContentView(bottomSheetView);
+        dialog.show();
     }
 }
