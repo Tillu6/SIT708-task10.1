@@ -8,7 +8,7 @@ public class User {
     public String phone;
     public String avatarUri;
 
-    // 全参构造函数（用于注册、插入数据库）
+ 
     public User(String username, String email, String password, String phone, String avatarUri) {
         this.username = username;
         this.email = email;
@@ -17,6 +17,5 @@ public class User {
         this.avatarUri = avatarUri;
     }
 
-    // 无参构造函数（用于数据库读取时临时赋值）
     public User() {}
 }
