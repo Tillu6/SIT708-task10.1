@@ -10,7 +10,7 @@ public class Question implements Serializable {
     public String response; // For result page display
     public boolean isExpanded = false; // Control expansion status
 
-    // 新增：用于 History 页显示时间与 topic
+    
     public String timestamp;
     public String taskTitle;
 
