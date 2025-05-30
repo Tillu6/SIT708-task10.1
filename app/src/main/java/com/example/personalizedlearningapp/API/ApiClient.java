@@ -18,11 +18,11 @@ import okhttp3.Response;
 public class ApiClient {
 
     private static final OkHttpClient client = new OkHttpClient.Builder()
-            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)  // 设置连接超时
-            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)     // 设置读取超时
-            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)    // 设置写入超时
+            .connectTimeout(60, java.util.concurrent.TimeUnit.SECONDS)  
+            .readTimeout(60, java.util.concurrent.TimeUnit.SECONDS)     
+            .writeTimeout(60, java.util.concurrent.TimeUnit.SECONDS)    
             .build();
-    private static final String BASE_URL = "http://10.0.2.2:3000"; // 模拟器访问本地 Flask 用 10.0.2.2
+    private static final String BASE_URL = "http://10.0.2.2:3000"; 
 
 
     public interface OnQuizResponse {
